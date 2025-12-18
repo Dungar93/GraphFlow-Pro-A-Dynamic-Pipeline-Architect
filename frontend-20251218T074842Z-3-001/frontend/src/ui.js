@@ -3,13 +3,7 @@
 // --------------------------------------------------
 
 import { useState, useRef, useCallback } from 'react';
-import ReactFlow, { 
-  Controls, 
-  Background, 
-  MiniMap,
-  applyNodeChanges, // <--- THIS WAS MISSING
-  applyEdgeChanges  // <--- THIS WAS MISSING
-} from 'reactflow';
+import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
 
@@ -45,8 +39,8 @@ const selector = (state) => ({
   edges: state.edges,
   getNodeID: state.getNodeID,
   addNode: state.addNode,
-  setNodes: state.setNodes, // <--- ADD THIS
-  setEdges: state.setEdges, // <--- ADD THIS
+  onNodesChange: state.onNodesChange, // <--- We use the Store's function directly
+  onEdgesChange: state.onEdgesChange, // <--- We use the Store's function directly
   onConnect: state.onConnect,
 });
 
@@ -58,8 +52,8 @@ export const PipelineUI = () => {
       edges,
       getNodeID,
       addNode,
-      setNodes, // <--- Get these from store
-      setEdges, // <--- Get these from store
+      onNodesChange, // <--- Get from store
+      onEdgesChange, // <--- Get from store
       onConnect
     } = useStore(selector, shallow);
 
@@ -67,18 +61,6 @@ export const PipelineUI = () => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
       return nodeData;
     }
-
-    // --- ADDED THIS SECTION FOR DELETION TO WORK ---
-    const onNodesChange = useCallback(
-      (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-      [setNodes]
-    );
-
-    const onEdgesChange = useCallback(
-      (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-      [setEdges]
-    );
-    // -----------------------------------------------
 
     const onDrop = useCallback(
         (event) => {
@@ -110,7 +92,7 @@ export const PipelineUI = () => {
             addNode(newNode);
           }
         },
-        [reactFlowInstance, getNodeID, addNode] // Added dependencies to silence warning
+        [reactFlowInstance, getNodeID, addNode]
     );
 
     const onDragOver = useCallback((event) => {
@@ -124,10 +106,10 @@ export const PipelineUI = () => {
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange} // <--- LINKED HERE
-                onEdgesChange={onEdgesChange} // <--- LINKED HERE
+                onNodesChange={onNodesChange} 
+                onEdgesChange={onEdgesChange} 
                 onConnect={onConnect}
-                deleteKeyCode={["Backspace", "Delete"]} // <--- ENABLE KEYBOARD DELETE
+                deleteKeyCode={["Backspace", "Delete"]} // <--- This enables the delete key!
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -136,9 +118,15 @@ export const PipelineUI = () => {
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
             >
-                <Background color="#aaa" gap={gridSize} />
+              <Background 
+    color="#232329" 
+    gap={20} 
+    variant="lines"  // <--- This changes dots to a cool grid
+    size={1} 
+    lineWidth={0.5}
+/>
                 <Controls />
-                <MiniMap />
+                <MiniMap style={{ height: 100, width: 150 }} zoomable pannable />
             </ReactFlow>
         </div>
         </>
