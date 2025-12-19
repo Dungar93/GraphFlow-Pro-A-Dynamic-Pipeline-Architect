@@ -1,3 +1,7 @@
+[![React](https://img.shields.io/badge/Frontend-React%20Flow-blue?style=for-the-badge&logo=react)](https://reactflow.dev/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-green?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Language-Python%203.10-yellow?style=for-the-badge&logo=python)](https://www.python.org/)
+[![IIT Jodhpur](https://img.shields.io/badge/Institution-IIT%20Jodhpur-orange?style=for-the-badge)](https://iitj.ac.in/)
 # GraphFlow Pro: A Dynamic Pipeline Architect
 
 ## 🚀 Project Overview & Vision
